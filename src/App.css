@@ -1,8 +1,7 @@
-
 .glass {
   background: linear-gradient(135deg,
-          rgba(255, 255, 255, 0.4),
-          rgba(255, 255, 255, 0));
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
@@ -12,8 +11,8 @@
 
 .glass2 {
   background: linear-gradient(135deg,
-          rgba(255, 255, 255, 0.7),
-          rgba(255, 255, 255, 0));
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -22,16 +21,16 @@
 
 .glass3 {
   background: linear-gradient(135deg,
-          rgba(255, 255, 255, 0),
-          rgba(255, 255, 255, 0));
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
 .glass4 {
   background: linear-gradient(135deg,
-          rgba(255, 255, 255, 1),
-          rgba(255, 255, 255, 0.5));
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0.5));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
@@ -39,8 +38,8 @@
 
 .glass5 {
   background: linear-gradient(135deg,
-          rgba(255, 255, 255, 0.7),
-          rgba(255, 255, 255, 0.7));
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0.7));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
