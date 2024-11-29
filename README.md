@@ -1,7 +1,7 @@
 
 # PassVault 🔒
 
-**PassVault** is a responsive, mobile-friendly password management application designed to store and organize your credentials, including passwords, usernames, and website URLs. Built with React, Express, MongoDB, and Node.js, PassVault offers a smooth and intuitive experience for managing your data.
+**PassVault** is a responsive, mobile-friendly password management application designed to store and organize your credentials, including passwords, usernames, and website URLs. Built with React, Express, MongoDB, Node.js, and Tailwind CSS, PassVault offers a smooth and intuitive experience for managing your data.
 
 ## Table of Contents
 
@@ -31,6 +31,7 @@ PassVault provides a simple solution for managing website credentials in one cen
 - **[Express](https://expressjs.com/):** Backend framework for server-side logic.
 - **[MongoDB](https://www.mongodb.com/):** Database for managing stored data.
 - **[Node.js](https://nodejs.org/):** JavaScript runtime for backend processing.
+- **[Tailwind CSS](https://tailwindcss.com/):** Utility-first CSS framework for efficient and responsive styling.
 
 ## Prerequisites 📦
 
@@ -70,13 +71,10 @@ Follow these steps to run PassVault locally:
 ## Screenshots 📷
 
 ### Desktop View
-
-![Desktop View](https://github.com/user-attachments/assets/b5628ffd-be1b-48c7-83ff-6489fdba8a67)
+![Desktop View](https://github.com/user-attachments/assets/786dcc17-e1f9-40ba-8e27-c4789bdbbbf0)
 
 ### Mobile View
-
-![Mobile View](https://github.com/user-attachments/assets/d97a7e2f-7570-4403-b323-7ee3b00bb090)
-
+![Mobile View](https://github.com/user-attachments/assets/eff8e1db-e926-4c4c-9889-373a055d203e)
 
 *Screenshots demonstrate PassVault's responsive design across devices.*
 
@@ -90,3 +88,4 @@ Contributions are welcome! If you have suggestions or improvements, fork the rep
 - **[Express](https://expressjs.com/):** For handling server-side logic.
 - **[MongoDB](https://www.mongodb.com/):** For efficient data management.
 - **[Node.js](https://nodejs.org/):** For backend processing.
+- **[Tailwind CSS](https://tailwindcss.com/):** For styling and responsive design.
