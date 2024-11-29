@@ -1,139 +1,148 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react'
+import { useRef, useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuidv4 } from 'uuid';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Manager = () => {
+    const ref = useRef()
+    const passwordRef = useRef()
+    const [form, setform] = useState({ site: "", username: "", password: "" })
+    const [passwordArray, setPasswordArray] = useState([])
 
-    const ref = useRef();
-    const passwordRef = useRef();
-    const [form, setForm] = useState({ site: "", username: "", password: "" });
-    const [passwordArray, setPasswordArray] = useState([]);
+    const getPasswords = async () => {
+        let req = await fetch("http://localhost:3000/")
+        let passwords = await req.json()
+        setPasswordArray(passwords)
+    }
+
 
     useEffect(() => {
-        let passwords = localStorage.getItem("password");
-        if (passwords) {
-            setPasswordArray(JSON.parse(passwords));
+        getPasswords()
+    }, [])
+
+    const savePassword = async () => {
+        if (!form.site || !form.username || !form.password) {
+            toast.error("All fields are required!");
+            return;
         }
-    }, []);
+
+        try {
+            if (form._id) {
+                const response = await fetch("http://localhost:3000/", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(form)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    toast.success("Password updated successfully!");
+                } else {
+                    toast.error("Failed to update the password!");
+                }
+            } else {
+                const newPassword = {
+                    site: form.site,
+                    username: form.username,
+                    password: form.password,
+                    id: uuidv4()
+                };
+
+                const response = await fetch("http://localhost:3000/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newPassword)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    toast.success("Password saved successfully!");
+                } else {
+                    toast.error("Failed to save the password!");
+                }
+            }
+
+            setform({ site: "", username: "", password: "" });
+            getPasswords();
+        } catch (error) {
+            console.error("Error saving/updating password:", error);
+            toast.error("An error occurred while saving/updating the password.");
+        }
+    };
+
+
+    const deletePassword = async (id) => {
+        try {
+            const response = await fetch("http://localhost:3000/", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                toast.success("Password deleted successfully!");
+                getPasswords();
+            } else {
+                toast.error("Failed to delete the password!");
+            }
+        } catch (error) {
+            console.error("Error deleting password:", error);
+            toast.error("An error occurred while deleting the password.");
+        }
+    };
+
+    const editPassword = async (id) => {
+
+        const passwordToEdit = passwordArray.find((item) => item._id === id);
+        if (passwordToEdit) {
+            try {
+
+                await deletePassword(id);
+
+                setform({
+                    site: passwordToEdit.site,
+                    username: passwordToEdit.username,
+                    password: passwordToEdit.password,
+                });
+
+                toast.info("Editing mode: Update the fields and save.");
+            } catch (error) {
+                console.error("Error while preparing to edit the password:", error);
+                toast.error("Failed to prepare the password for editing.");
+            }
+        }
+    };
+
 
     const showPassword = () => {
-        passwordRef.current.type = "text";
-        if (ref.current.src.includes("/assets/icons/hide.png")) {
-            ref.current.src = "/assets/icons/show.png";
-            passwordRef.current.type = "password";
-        } else {
+        if (passwordRef.current.type === "password") {
             passwordRef.current.type = "text";
             ref.current.src = "/assets/icons/hide.png";
-        }
-    };
-
-    const savePassword = () => {
-        if (form.site.length > 3 && form.username.length > 3 && form.password.length > 3) {
-            const newPassword = { ...form, id: uuidv4() };
-            const updatedPasswords = [...passwordArray, newPassword];
-
-            setPasswordArray(updatedPasswords);
-            localStorage.setItem("password", JSON.stringify(updatedPasswords));
-            console.log("Saved Passwords:", updatedPasswords);
-
-            setForm({ site: "", username: "", password: "" });
-
-            toast.success('Password saved!', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
         } else {
-            toast.error('Error: Password not saved! Please fill all fields with valid data.', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+            passwordRef.current.type = "password";
+            ref.current.src = "/assets/icons/show.png";
         }
-    };
-
-    const deletePassword = (id) => {
-        const updatedPasswords = passwordArray.filter(password => password.id !== id);
-        setPasswordArray(updatedPasswords);
-        localStorage.setItem("password", JSON.stringify(updatedPasswords));
-        console.log(updatedPasswords);
-        toast.success('Password deleted!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
-    };
-
-    const editPassword = (id) => {
-        console.log("Editing password with ID:", id);
-
-        const passwordToEdit = passwordArray.find(item => item.id === id);
-
-        if (passwordToEdit) {
-            setForm(passwordToEdit);
-            const updatedPasswords = passwordArray.filter(item => item.id !== id);
-
-            setPasswordArray(updatedPasswords);
-            localStorage.setItem("password", JSON.stringify(updatedPasswords));
-
-            toast.info('Edit the details and save to update the password.', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        } else {
-            toast.error('Error: Password not found!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-        }
-    };
-
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const copyPassword = (password) => {
-        navigator.clipboard.writeText(password);
-        toast.success('Password Copied!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
+        navigator.clipboard.writeText(password)
+            .then(() => {
+                toast.success("Password copied to clipboard!");
+            })
+            .catch((error) => {
+                console.error("Error copying password:", error);
+                toast.error("Failed to copy the password.");
+            });
     };
 
+
+    const handleChange = (e) => {
+        setform({ ...form, [e.target.name]: e.target.value })
+    }
+
+    
     return (
         <>
             <ToastContainer
@@ -166,7 +175,7 @@ const Manager = () => {
                     <img className='h-10' src="/assets/icons/password.png" alt="password icon" />
                 </button>
                 <div className='glass p-4 rounded-lg w-[100%] h-[100%] overflow-auto'>
-                    <h1 className='m-2 font-bold '>Your passwords:</h1>
+                    <h1 className='m-2 font-bold hidden md:block '>Your passwords:</h1>
                     {passwordArray.length === 0 && <div className='text-center p-4'>No passwords to display </div>}
                     {passwordArray.length !== 0 && <table className="table-auto w-full">
                         <thead>
@@ -194,17 +203,16 @@ const Manager = () => {
                                             className='h-5 cursor-pointer'
                                             src="/assets/icons/edit.png"
                                             alt="edit icon"
-                                            onClick={() => { editPassword(item.id) }}
+                                            onClick={() => { editPassword(item._id) }}
                                         />
                                         <img
+                                            onClick={() => deletePassword(item._id)}
                                             className='h-5 cursor-pointer'
                                             src="/assets/icons/delete.png"
                                             alt="delete icon"
-                                            onClick={() => { deletePassword(item.id) }}
                                         />
                                     </td>
-
-                                </tr>;
+                                </tr>
                             })}
                         </tbody>
                     </table>}
@@ -212,6 +220,6 @@ const Manager = () => {
             </div>
         </>
     );
-};
+}
 
 export default Manager;
